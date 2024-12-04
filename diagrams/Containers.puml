@@ -1,0 +1,45 @@
+@startuml
+!include C4Lib/C4_Container.puml
+
+LAYOUT_TOP_DOWN()
+
+Person(user, "Пользователь")
+
+System_Boundary(system, "Система IoT") {
+    Container(api_gateway, "API Gateway", "REST API", "Централизованный шлюз для всех запросов.")
+    Container(auth_service, "Сервис аутентификации и авторизации", "Node.js/Java", "Обеспечивает аутентификацию пользователей.")
+    Container(user_profile_service, "Сервис пользовательских профилей", "java", "Управляет данными профилей.")
+    Container(device_management_service, "Сервис управления устройствами", "java", "Управляет списком устройств.")
+    Container(device_integration_service, "Сервис интеграции с устройствами", "Rust", "Подключает устройства и обрабатывает данные.")
+    Container(scenario_service, "Сервис управления сценариями", "Java", "Создает и управляет сценариями.")
+    Container(telemetry_service, "Сервис телеметрии и мониторинга", "Scala", "Собирает телеметрию с устройств.")
+    Container(notification_service, "Сервис уведомлений", "java", "Отправляет уведомления пользователям.")
+'    Container(websocket_service, "Сервис веб-сокетов", "Node.js", "Обеспечивает real-time взаимодействие.")
+    Container(logging_service, "Сервис логирования и мониторинга", "Elastic Stack", "Собирает и анализирует логи.")
+
+    ContainerDb(database_auth, "База данных", "PostgreSQL", "Хранение сессиий пользователя.")
+    ContainerDb(database_user, "База данных", "PostgreSQL", "Хранение пользователей.")
+    ContainerDb(database_device_management, "База данных", "PostgreSQL", "Хранение устройств.")
+    ContainerDb(database, "База данных", "PostgreSQL", "Хранение сценариями.")
+
+    Container(queue, "Очередь сообщений", "Kafka", "Организация обмена сообщениями между сервисами.")
+}
+
+Rel(user, api_gateway, "Использует")
+Rel(api_gateway, auth_service, "Запросы аутентификации")
+Rel(api_gateway, user_profile_service, "Запросы профилей")
+Rel(api_gateway, device_management_service, "Запросы управления устройствами")
+Rel(api_gateway, scenario_service, "Запросы сценариев")
+Rel(api_gateway, notification_service, "Запросы уведомлений")
+'Rel(api_gateway, websocket_service, "Подключение WebSocket")
+Rel(auth_service, database_auth, "Чтение и запись пользователей")
+Rel(user_profile_service, database_user, "Чтение и запись профилей")
+Rel(device_management_service, database_device_management, "Чтение и запись данных устройств")
+Rel(device_integration_service, queue, "Отправка данных")
+Rel(scenario_service, database, "Чтение и запись сценариев")
+Rel(telemetry_service, queue, "Чтение телеметрии")
+Rel(notification_service, queue, "Чтение уведомлений")
+'Rel(websocket_service, queue, "Чтение сообщений")
+Rel(logging_service, queue, "Чтение логов")
+
+@enduml
