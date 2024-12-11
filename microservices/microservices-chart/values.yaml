@@ -1,0 +1,35 @@
+managementDevice:
+  image: "management-device:latest"
+  replicas: 1
+  environment:
+    SPRING_DATASOURCE_URL: "jdbc:postgresql://device-db:5432/device_db"
+    SPRING_DATASOURCE_USERNAME: "user"
+    SPRING_DATASOURCE_PASSWORD: "password"
+    SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+    SPRING_PROFILES_ACTIVE: "dev"
+
+managementTelemetry:
+  image: "management-telemetry:latest"
+  replicas: 1
+  environment:
+    SPRING_DATASOURCE_URL: "jdbc:postgresql://telemetry-db:5432/telemetry_db"
+    SPRING_DATASOURCE_USERNAME: "user"
+    SPRING_DATASOURCE_PASSWORD: "password"
+    SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+    SPRING_PROFILES_ACTIVE: "dev"
+
+postgres:
+  image: "postgres:15"
+  user: "user"
+  password: "password"
+
+zookeeper:
+  image: "confluentinc/cp-zookeeper:7.5.0"
+  clientPort: 2181
+  tickTime: 2000
+
+kafka:
+  image: "confluentinc/cp-kafka:7.5.0"
+  brokerId: 1
+  listeners: "PLAINTEXT://kafka:9092"
+  advertisedListeners: "PLAINTEXT://kafka:9092"
