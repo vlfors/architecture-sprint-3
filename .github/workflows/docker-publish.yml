@@ -40,10 +40,10 @@ jobs:
       # Build and push Docker images
       - name: Build and Push Docker Image for management-device
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/management-device:latest ./path/to/management-device
+          docker build -t ghcr.io/${{ github.repository }}/management-device:latest ./microservices/management-device
           docker push ghcr.io/${{ github.repository }}/management-device:latest
 
       - name: Build and Push Docker Image for management-telemetry
         run: |
-          docker build -t ghcr.io/${{ github.repository }}/management-telemetry:latest ./path/to/management-telemetry
+          docker build -t ghcr.io/${{ github.repository }}/management-telemetry:latest ./microservices/management-telemetry
           docker push ghcr.io/${{ github.repository }}/management-telemetry:latest
