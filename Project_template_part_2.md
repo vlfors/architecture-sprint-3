@@ -89,8 +89,11 @@ kubectl get svc
 # ✅ ❌ Задание 1. Контейнеризация микросервисов
 
 1. **Созданы Helm-чарты** 
+- [microservices-chart](microservices%2Fmicroservices-chart)
 2. **Docker-образы собраны и загружены в хранилище артефактов**
 Добавьте сюда ссылку на GitHub Container Registry.
+ - [Образ management-telemetry](ghcr.io/vlfors/architecture-sprint-3/management-telemetry:latest)
+ - [Образ management-device](ghcr.io/vlfors/architecture-sprint-3/management-device:latest)
 3. **Запуск сервисов**
 Напишите, какие команды нужно использовать для запуска сервисов с нуля.
 4. **Тестирование работы сервисов**
@@ -98,9 +101,37 @@ kubectl get svc
 
 # ✅ ❌ Задание 2. Настройка CI/CD-пайплайнов **c помощью GitHub Actions**
 
-1. **Созданы CI/CD-пайплайны для каждого микросервиса**
-    - Опишите шаги пайплайна GitHub Actions в ci.yaml и добавьте сюда ссылку на этот файл.
-    - Опишите шаги, которые нужно пройти для сборки, тестирования, загрузки образов в хранилище артефактов и обновления Helm релиза в Minikube.
+**Созданы CI/CD-пайплайны для каждого микросервиса**
+   Опишите шаги пайплайна GitHub Actions в ci.yaml и добавьте сюда ссылку на этот файл.
+Опишите шаги, которые нужно пройти для сборки, тестирования, загрузки образов в хранилище артефактов и обновления Helm релиза в Minikube.
+   [docker-publish.yml](.github%2Fworkflows%2Fdocker-publish.yml)
+1.       Запуск на ветке project_part_2:
+
+Workflow срабатывает при пуше изменений в указанную ветку.
+2. Настройка разрешений:
+
+Предоставлены права на чтение содержимого репозитория и запись в пакеты (packages: write).
+3. Клонирование репозитория:
+
+С помощью actions/checkout@v3 код проекта скачивается для дальнейшей работы.
+4. Установка JDK:
+
+Устанавливается JDK версии 17 через actions/setup-java@v3.
+5. Сборка JAR-файлов:
+
+* Для каждого микросервиса выполняется mvn clean package в соответствующих директориях:
+management-device
+management-telemetry
+Авторизация в GitHub Container Registry (GHCR):
+
+Выполняется логин в GHCR с использованием токена GITHUB_TOKEN.
+1. Сборка и пуш Docker-образов:
+
+* Для каждого микросервиса:
+Выполняется docker build для создания Docker-образа.
+Образ пушится в GHCR под тегом latest.
+* - [Образ management-telemetry](ghcr.io/vlfors/architecture-sprint-3/management-telemetry:latest)
+- [Образ management-device](ghcr.io/vlfors/architecture-sprint-3/management-device:latest)
 2. **Настроены триггеры для запуска пайплайнов**
 
     Пайплайны настроены на запуск при каждом пуше кода в репозиторий.
