@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Копируем скомпилированный JAR файл в контейнер
-COPY target/management-telemetry.jar /app/management-telemetry.jar
+COPY target/management-telemetry-0.0.1-SNAPSHOT.jar /app/management-telemetry.jar
 
 # Открываем порт, на котором будет работать приложение
 EXPOSE 8081

@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Копируем скомпилированный JAR файл в контейнер
-COPY target/management-device.jar /app/management-device.jar
+COPY target/management-device-0.0.1-SNAPSHOT.jar /app/management-device.jar
 
 
 # Открываем порт, на котором будет работать приложение
