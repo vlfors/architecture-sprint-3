@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: management-device
+spec:
+  replicas: {{ .Values.managementDevice.replicas }}
+  selector:
+    matchLabels:
+      app: management-device
+  template:
+    metadata:
+      labels:
+        app: management-device
+    spec:
+      containers:
+        - name: management-device
+          image: {{ .Values.managementDevice.image }}
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: {{ .Values.managementDevice.environment.SPRING_DATASOURCE_URL }}
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ .Values.managementDevice.environment.SPRING_DATASOURCE_USERNAME }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: {{ .Values.managementDevice.environment.SPRING_DATASOURCE_PASSWORD }}
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: {{ .Values.managementDevice.environment.SPRING_KAFKA_BOOTSTRAP_SERVERS }}
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ .Values.managementDevice.environment.SPRING_PROFILES_ACTIVE }}
+          ports:
+            - containerPort: 8080

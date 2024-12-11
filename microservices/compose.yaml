@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  management-device:
+    image: management-device:latest
+    container_name: management-device
+    build:
+      context: ./management-device # Путь к директории с Dockerfile
+    depends_on:
+      - device-db
+      - kafka
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://device-db:5432/device_db
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - SPRING_PROFILES_ACTIVE=dev
+    ports:
+      - "8080:8080"
+
+  management-telemetry:
+    image: management-telemetry:latest
+    container_name: management-telemetry
+    build:
+      context: ./management-telemetry # Путь к директории с Dockerfile
+    depends_on:
+      - telemetry-db
+      - kafka
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://telemetry-db:5432/telemetry_db
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - SPRING_PROFILES_ACTIVE=dev
+    ports:
+      - "8081:8081"
+
+  device-db:
+    image: postgres:15
+    container_name: device-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: device_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - device_db_data:/var/lib/postgresql/data
+
+  telemetry-db:
+    image: postgres:15
+    container_name: telemetry-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: telemetry_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - telemetry_db_data:/var/lib/postgresql/data
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    container_name: zookeeper
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: kafka
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+    ports:
+      - "9092:9092"
+
+volumes:
+  device_db_data:
+  telemetry_db_data:

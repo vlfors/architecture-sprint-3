@@ -85,7 +85,7 @@ House }o--|| User : "Много к 1"
 Device }o--|| House : "Много к 1"
 Device }o--|| DeviceType : "Много к 1"
 Module }o--|| Device : "Много к 1"
-Telemetry }o--|| Module : "Много к 1"
+Telemetry }o--|| Device : "Много к 1"
 Notification }o--|| User : "Много к 1"
 Scenario }o--|| Module : "Много к 1"
 

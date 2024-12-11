@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: device-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: device-db
+  template:
+    metadata:
+      labels:
+        app: device-db
+    spec:
+      containers:
+        - name: device-db
+          image: {{ .Values.postgres.image }}
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.postgres.user }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.postgres.password }}
+            - name: POSTGRES_DB
+              value: device_db
+          ports:
+            - containerPort: 5432

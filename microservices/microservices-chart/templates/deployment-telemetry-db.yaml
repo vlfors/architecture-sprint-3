@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telemetry-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: telemetry-db
+  template:
+    metadata:
+      labels:
+        app: telemetry-db
+    spec:
+      containers:
+        - name: telemetry-db
+          image: {{ .Values.postgres.image }}
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.postgres.user }}
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.postgres.password }}
+            - name: POSTGRES_DB
+              value: telemetry_db
+          ports:
+            - containerPort: 5432
