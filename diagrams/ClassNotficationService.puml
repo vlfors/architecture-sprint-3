@@ -1,0 +1,62 @@
+@startuml
+title Диаграмма классов: Компоненты сервиса уведомлений
+top to bottom direction
+class User {
+    +name: String
+    +email: String
+    +receiveNotification(notification: Notification): void
+}
+
+class Notification {
+    +id: UUID
+    +message: String
+    +timestamp: DateTime
+    +type: String
+}
+
+class NotificationDispatcher {
+    +dispatch(notification: Notification): void
+    +save(notification: Notification): void
+}
+
+class MessageDispatcher {
+    +dispatchToChannels(notification: Notification): void
+    +updateStatus(notification: Notification): void
+}
+
+class PushNotificationSender {
+    +dispatchToChannels(notification: Notification): void
+}
+
+class HttpNotificationSender {
+    +dispatchToChannels(notification: Notification): void
+
+}
+
+class SmsNotificationSender {
+    +dispatchToChannels(notification: Notification): void
+}
+
+class NotificationRepository {
+    +save(notification: Notification): void
+    +updateStatus(notificationId: UUID, status: String): void
+    +findById(notificationId: UUID): Notification
+}
+
+class KafkaBroker {
+    +publish(event: String): void
+}
+
+' Relationships
+KafkaBroker "*" --"*" NotificationDispatcher : Получает уведомления
+NotificationDispatcher --* MessageDispatcher : Передает сообщения
+PushNotificationSender ..|> MessageDispatcher
+HttpNotificationSender ..|> MessageDispatcher
+SmsNotificationSender ..|> MessageDispatcher
+PushNotificationSender "*" -- "1"  User : Отправляет push
+HttpNotificationSender "*" -- "1" User : Отправляет HTTP
+SmsNotificationSender "*" -- "1" User : Отправляет SMS
+NotificationDispatcher --* NotificationRepository : Использует хранилище
+
+NotificationRepository "1"-- "*" Notification : Управляет данными
+@enduml

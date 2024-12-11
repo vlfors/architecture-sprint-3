@@ -1,0 +1,41 @@
+@startuml
+
+!include C4Lib/C4_Container.puml
+
+title Диаграмма C4: Определение доменов и границы контекстов
+' Домен: Управление устройствами
+Container_Boundary(domain_DeviceControl, "Управление устройствами") {
+    Person(user, "Пользователь")
+    System(system_Heating, "Система отопления", "Управляет отоплением дома")
+
+    Container(service_HeatingControl, "Сервис управления отоплением", "Приложение", "Обеспечивает управление системой отопления")
+    ContainerDb(repo_Heating, "Репозиторий системы отопления", "База данных", "Хранит состояние системы отопления")
+
+    Rel(user, service_HeatingControl, "Управляет")
+    Rel(service_HeatingControl, system_Heating, "Контролирует состояние")
+    Rel(service_HeatingControl, repo_Heating, "Читает/Записывает")
+}
+
+' Домен: Мониторинг температуры
+Container_Boundary(domain_TemperatureMonitoring, "Мониторинг температуры") {
+    System(sensor_Temperature, "Температурный сенсор", "Устройство", "Измеряет текущую температуру")
+
+    Container(service_Schedule, "Сервис планирования расписания", "Приложение", "Планирует и обновляет данные температурных сенсоров")
+    ContainerDb(repo_Schedule, "Репозиторий расписания", "База данных", "Хранит данные расписания и температуры")
+
+    Rel(sensor_Temperature, service_Schedule, "Передает данные")
+    Rel(service_Schedule, repo_Schedule, "Читает/Записывает")
+}
+'
+' Домен: Датчики и оборудование
+Boundary(domain_SensorsDevices, "Датчики и оборудование") {
+    System(system_Heating, "Система отопления")
+    System(sensor_Temperature, "Температурный сенсор")
+
+    Container(service_DeviceManagement, "Сервис управления оборудованием", "Приложение", "Управляет работой датчиков и оборудования")
+
+    Rel(service_DeviceManagement, system_Heating, "Управляет")
+    Rel(service_DeviceManagement, sensor_Temperature, "Управляет")
+}
+
+@enduml

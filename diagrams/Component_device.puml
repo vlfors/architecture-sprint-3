@@ -1,0 +1,45 @@
+@startuml
+
+title Компоненты микросервиса
+
+top to bottom direction
+
+!includeurl C4Lib/C4_Component.puml
+
+Container_Boundary(ServiceDevice, "Сервисы устройств") {
+  Container(DeviceManagement,"Сервис управления устройствами", "Java, Spring", "Handles user interactions")
+  Container(Database, "DatabaseDeviceManagement", "PostgreSQL", "Stores")
+
+  Container(IntegrationDevices,"Интеграция устройств", "Java, Spring", "Handles user interactions")
+  Container(DatabaseIntegrationDevices, "IntegrationDevices", "PostgreSQL", "Stores")
+
+}
+
+Container(DeviceManagement, "Сервис управления устройствами", "Java, Spring") {
+  Component(DeviceSystemController, "DeviceManagementController", "WebController")
+  Component(ServiceLayer, "DeviceManagementService", "Business logic")
+  Component(RepositoryLayer, "DeviceManagementRepository", "Data access logic")
+}
+
+Container(IntegrationDevices, "Интеграция устройств", "Java, Spring") {
+  Component(IntegrationDevicesController, "IntegrationDevicesController", "WebController")
+   Component(IntegrationDevicesService, "IntegrationDevicesService", "Business logic")
+  Component(IntegrationDevicesRepository, "IntegrationDevicesRepository", "Data access logic")
+}
+Rel(DeviceSystemController,ServiceLayer,"Регистрация новых устройств")
+Rel(DeviceSystemController,ServiceLayer,"Привязка устройств к пользователям")
+
+Rel(ServiceLayer, DeviceSystemController,"Каталог поддерживаемых устройств")
+Rel(DeviceSystemController,ServiceLayer,"Метаданные и спецификации устройств")
+
+Rel(ServiceLayer,RepositoryLayer,"Reads/Writes data")
+Rel(RepositoryLayer,Database,"Reads/Writes user data")
+
+Rel(IntegrationDevicesService,IntegrationDevicesRepository,"Reads/Writes data")
+Rel(IntegrationDevicesRepository,DatabaseIntegrationDevices,"Reads/Writes user data")
+
+Rel(IntegrationDevicesController,IntegrationDevicesService,"Адаптеры для различных протоколов ")
+Rel(IntegrationDevicesController,IntegrationDevicesService,"Преобразование команд между различными форматами")
+Rel(IntegrationDevicesController,IntegrationDevicesService,"Обработка подключения устройств партнеров")
+
+@enduml

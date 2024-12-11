@@ -1,0 +1,92 @@
+@startuml
+
+' Таблица пользователей
+entity (User) {
+    + id : UUID
+    + email : VARCHAR
+    + hashed_password : VARCHAR
+    + role : ENUM("admin", "user")
+    + created_at : TIMESTAMP
+}
+
+' Таблица профилей пользователей
+entity (UserProfile) {
+    + id : UUID
+    + user_id : UUID
+    + first_name : VARCHAR
+    + last_name : VARCHAR
+    + phone : VARCHAR
+    + address : TEXT
+}
+
+' Таблица устройств
+entity (Device) {
+    + id : UUID
+    + type_id : UUID
+    + house_id : UUID
+    + name : VARCHAR
+    + serial_number : VARCHAR
+    + status : ENUM("active", "inactive")
+    + created_at : TIMESTAMP
+}
+
+' Таблица телеметрии
+entity (Telemetry) {
+    + id : UUID
+    + device_id : UUID
+    + timestamp : TIMESTAMP
+    + data : JSON
+}
+
+' Таблица сценариев
+entity (Scenario) {
+    + id : UUID
+    + owner_id : UUID
+    + module_id : UUID
+    + name : VARCHAR
+    + description : TEXT
+    + created_at : TIMESTAMP
+}
+
+' Таблица уведомлений
+entity (Notification) {
+    + id : UUID
+    + user_id : UUID
+    + message : TEXT
+    + created_at : TIMESTAMP
+    + status : ENUM("unread", "read")
+}
+entity (House) {
+    + id : UUID
+    + owner_id : UUID
+    + address : VARCHAR
+    + name : VARCHAR
+    + created_at : TIMESTAMP
+}
+
+entity (DeviceType) {
+    + id : UUID
+    + name : VARCHAR
+    + description : TEXT
+}
+
+entity (Module) {
+    + id : UUID
+    + device_id : UUID
+    + name : VARCHAR
+    + type : ENUM("sensor", "actuator")
+    + configuration : JSON
+}
+
+
+' Связи между таблицами
+UserProfile ||--o{ User : "1 к 1"
+House }o--|| User : "Много к 1"
+Device }o--|| House : "Много к 1"
+Device }o--|| DeviceType : "Много к 1"
+Module }o--|| Device : "Много к 1"
+Telemetry }o--|| Module : "Много к 1"
+Notification }o--|| User : "Много к 1"
+Scenario }o--|| Module : "Много к 1"
+
+@enduml

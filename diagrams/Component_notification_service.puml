@@ -1,0 +1,46 @@
+@startuml
+
+title Компоненты микросервиса
+
+top to bottom direction
+
+!includeurl C4Lib/C4_Component.puml
+
+Person(User, "Пользователь, который получает уведомления")
+
+Container_Boundary(Notification, "Сервис уведомлений") {
+  Container(NotificationService,"NotificationService", "Java, Spring", "Handles user interactions")
+  Container(kafkaBroker, "Kafka Broker", "Apache Kafka", "Система доставки сообщений")
+  Container(StoreNotification, "Хранение уведомлений", "PostgreSQL", "Система доставки сообщений")
+
+}
+
+Container(NotificationService, "Сервис уведомлений", "Java, Spring") {
+  Component(NotificationDispatcher, "NotificationDispatcher", "Dispatcher")
+  Component(MessageDispatcher, "MessageDispatcher", "Dispatcher")
+  Component(PushNotificationSender , "PushNotificationSender", "Dispatcher")
+  Component(HttpNotificationSender , "HttpNotificationSender", "Dispatcher")
+  Component(SmsNotificationSender  , "SmsNotificationSender", "Dispatcher")
+  Component(NotificationRepository, "NotificationRepository", "Data access logic")
+  Component(NotificationRepository, "NotificationRepository", "Data access logic")
+}
+
+Rel(kafkaBroker, NotificationDispatcher,"Пересылка сообщения")
+Rel(NotificationDispatcher,MessageDispatcher,"Пересылка сообщения")
+Rel(MessageDispatcher,PushNotificationSender,"Привязка устройств к пользователям")
+Rel(MessageDispatcher,HttpNotificationSender,"Привязка устройств к пользователям")
+Rel(MessageDispatcher,SmsNotificationSender,"Привязка устройств к пользователям")
+Rel(NotificationRepository,StoreNotification,"Сохранение новых уведомлений")
+Rel(NotificationRepository,StoreNotification,"Обновление статуса уведомления")
+Rel(NotificationDispatcher,NotificationRepository,"Сохранение новых уведомлений")
+Rel(MessageDispatcher,NotificationRepository,"Обновление статуса уведомления")
+
+Rel(PushNotificationSender,User,"Отправка Push - уведомления")
+Rel(HttpNotificationSender,User,"Отправка Post - cooбщения")
+Rel(SmsNotificationSender,User,"Отправка Sms - cooбщения")
+
+
+
+
+
+@enduml
