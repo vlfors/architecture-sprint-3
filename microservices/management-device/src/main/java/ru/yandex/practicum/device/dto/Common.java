@@ -8,6 +8,5 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Common {
-    @Id
     private UUID transactionId;
 }

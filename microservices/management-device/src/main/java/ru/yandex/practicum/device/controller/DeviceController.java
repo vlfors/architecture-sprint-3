@@ -43,7 +43,7 @@ public class DeviceController {
 
     @PutMapping("/{deviceId}/status")
     public ResponseEntity<Device> updateDeviceStatus(@PathVariable UUID deviceId, @RequestBody DeviceCreate deviceUpdate) {
-        Device device = deviceService.updateDeviceStatus(deviceId, deviceUpdate.getStatus());
+        Device device = deviceService.updateDeviceStatus(deviceId, deviceUpdate .getStatus());
         return ResponseEntity.ok(device);
     }
 }
