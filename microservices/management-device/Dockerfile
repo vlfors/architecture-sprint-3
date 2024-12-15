@@ -1,6 +1,5 @@
 # Используем официальный образ Maven для сборки проекта
-FROM maven:3.8.6-openjdk-17 AS build
-
+FROM maven:3-openjdk-17 AS build
 # Устанавливаем рабочую директорию для сборки
 WORKDIR /app
 
@@ -22,15 +21,11 @@ FROM openjdk:17-jdk-slim
 # Устанавливаем рабочую директорию
 WORKDIR /app
 
-# Копируем скомпилированный JAR файл в контейнер
-COPY target/management-device-0.0.1-SNAPSHOT.jar /app/management-device.jar
-
+# Копируем скомпилированный JAR файл из предыдущего этапа сборки
+COPY --from=build /app/target/management-device-0.0.1-SNAPSHOT.jar /app/management-device.jar
 
 # Открываем порт, на котором будет работать приложение
 EXPOSE 8080
 
-
 # Определяем команду для запуска приложения
 ENTRYPOINT ["java", "-jar", "management-device.jar"]
-
-

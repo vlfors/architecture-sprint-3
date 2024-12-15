@@ -1,5 +1,5 @@
 # Используем официальный образ Maven для сборки проекта
-FROM maven:3.8.6-openjdk-17 AS build
+FROM maven:3-openjdk-17 AS build
 
 # Устанавливаем рабочую директорию для сборки
 WORKDIR /app
@@ -22,7 +22,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Копируем скомпилированный JAR файл в контейнер
-COPY target/management-telemetry-0.0.1-SNAPSHOT.jar /app/management-telemetry.jar
+COPY --from=build  target/management-telemetry-0.0.1-SNAPSHOT.jar /app/management-telemetry.jar
 
 # Открываем порт, на котором будет работать приложение
 EXPOSE 8081
