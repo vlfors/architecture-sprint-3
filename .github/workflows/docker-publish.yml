@@ -16,25 +16,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Set up JDK
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          java-version: '17'
-          distribution: 'temurin'
-
-      # Build JAR for management-device
-      - name: Build JAR for management-device
-        working-directory: ./microservices/management-device
-        run: |
-          mvn clean package
-
-      # Build JAR for management-telemetry
-      - name: Build JAR for management-telemetry
-        working-directory: ./microservices/management-telemetry
-        run: |
-          mvn clean package
-
       # Log in to GitHub Container Registry
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
