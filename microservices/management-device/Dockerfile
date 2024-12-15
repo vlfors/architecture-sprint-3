@@ -3,7 +3,7 @@ FROM maven:3-openjdk-17 AS build
 WORKDIR /app
 
 # Копируем pom.xml и скачиваем зависимости Maven для лучшего кэширования
-COPY pom.xml settings.xml . 
+COPY pom.xml . 
 RUN mvn dependency:go-offline
 
 # Копируем исходный код проекта и собираем JAR
