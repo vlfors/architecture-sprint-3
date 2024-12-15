@@ -1,3 +1,21 @@
+# Используем официальный образ Maven для сборки проекта
+FROM maven:3.8.6-openjdk-17 AS build
+
+# Устанавливаем рабочую директорию для сборки
+WORKDIR /app
+
+# Копируем pom.xml и файлы зависимостей в контейнер
+COPY pom.xml .
+
+# Загружаем зависимости Maven (это делается отдельно для более эффективного кэширования)
+RUN mvn dependency:go-offline
+
+# Копируем исходный код проекта в контейнер
+COPY src ./src
+
+# Собираем проект и создаем JAR файл
+RUN mvn clean package -DskipTests
+
 # Используем официальный образ OpenJDK
 FROM openjdk:17-jdk-slim
 
