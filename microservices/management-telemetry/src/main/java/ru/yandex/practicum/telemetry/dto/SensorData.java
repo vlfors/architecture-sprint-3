@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
+
 public class SensorData extends Common {
 
     private int deviceId;

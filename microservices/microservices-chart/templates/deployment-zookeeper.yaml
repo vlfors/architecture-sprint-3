@@ -20,5 +20,4 @@ spec:
               value: "{{ .Values.zookeeper.clientPort }}"
             - name: ZOOKEEPER_TICK_TIME
               value: "{{ .Values.zookeeper.tickTime }}"
-          ports:
-            - containerPort: 2181
+
