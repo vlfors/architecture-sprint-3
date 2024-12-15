@@ -1,28 +1,27 @@
 # Используем официальный образ Maven для сборки проекта
 FROM maven:3-openjdk-17 AS build
-
-# Устанавливаем рабочую директорию для сборки
 WORKDIR /app
 
-# Копируем pom.xml и файлы зависимостей в контейнер
+# Копируем pom.xml и скачиваем зависимости Maven для лучшего кэширования
 COPY pom.xml .
-
-# Загружаем зависимости Maven (это делается отдельно для более эффективного кэширования)
 RUN mvn dependency:go-offline
 
-# Копируем исходный код проекта в контейнер
+# Копируем исходный код проекта и собираем JAR
 COPY src ./src
-
-# Собираем проект и создаем JAR файл
 RUN mvn clean package -DskipTests
-# Используем официальный образ OpenJDK
+
+# Используем минимальный образ OpenJDK
 FROM openjdk:17-jdk-slim
 
 # Устанавливаем рабочую директорию
 WORKDIR /app
 
+# Создаём непривилегированного пользователя
+RUN useradd -ms /bin/bash appuser
+USER appuser
+
 # Копируем скомпилированный JAR файл в контейнер
-COPY --from=build  target/management-telemetry-0.0.1-SNAPSHOT.jar /app/management-telemetry.jar
+COPY --from=build  /app/target/management-telemetry-0.0.1-SNAPSHOT.jar /app/management-telemetry.jar
 
 # Открываем порт, на котором будет работать приложение
 EXPOSE 8081
