@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: kafka
+  name: kafka-server
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: kafka
+      app: kafka-server
   template:
     metadata:
       labels:
-        app: kafka
+        app: kafka-server
     spec:
       containers:
-        - name: kafka
+        - name: kafka-server
           image: {{ .Values.kafka.image }}
           env:
             - name: KAFKA_BROKER_ID

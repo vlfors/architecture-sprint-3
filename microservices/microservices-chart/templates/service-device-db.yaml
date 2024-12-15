@@ -1,11 +1,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: kafka-server
+  name: device-db
 spec:
   selector:
-    app: kafka-server
+    app: device-db
   ports:
     - protocol: TCP
-      port: 9092
-      targetPort: 9092
+      port: 5432
+      targetPort: 5432

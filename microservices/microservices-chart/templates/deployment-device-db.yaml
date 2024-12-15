@@ -21,6 +21,16 @@ spec:
             - name: POSTGRES_PASSWORD
               value: {{ .Values.postgres.password }}
             - name: POSTGRES_DB
-              value: device_db
+              value: "device_db"
           ports:
             - containerPort: 5432
+          volumeMounts:
+            - name: init-script
+              mountPath: /docker-entrypoint-initdb.d/init-db.sh
+              subPath: init-db.sh
+
+      volumes:
+        - name: init-script
+          configMap:
+            name: postgres-init
+            defaultMode: 0755
