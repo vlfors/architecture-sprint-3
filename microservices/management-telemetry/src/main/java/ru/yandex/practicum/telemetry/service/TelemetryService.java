@@ -2,7 +2,8 @@ package ru.yandex.practicum.telemetry.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.telemetry.dto.Telemetry;
+import ru.yandex.practicum.telemetry.dto.TelemetryDto;
+import ru.yandex.practicum.telemetry.model.Telemetry;
 import ru.yandex.practicum.telemetry.repository.TelemetryRepository;
 
 import java.time.LocalDateTime;
@@ -21,14 +22,31 @@ public class TelemetryService {
     }
 
     public List<Telemetry> getTemperatureTelemetry(UUID deviceId) {
-        return telemetryRepository.findByDeviceIdAndData_Key(deviceId, "temperature");
+        return telemetryRepository.findByDeviceIdAndMetricType(deviceId, "temperature");
     }
 
-    public Telemetry createTelemetry(UUID deviceId, Map<String, Object> data) {
-        Telemetry telemetry = new Telemetry();
-        telemetry.setDeviceId(deviceId);
-        telemetry.setTimestamp(LocalDateTime.now());
-        telemetry.setData(data);
-        return telemetryRepository.save(telemetry);
+    public Telemetry createTelemetry(UUID deviceId, TelemetryDto telemetry) {
+
+
+        Map<String, Object> data = telemetry.getData();
+        String metricType = (String) data.get("metricType");
+        Double value = (data.get("value") instanceof Number) ? ((Number) data.get("value")).doubleValue() : null;
+
+
+        if (metricType == null || value == null) {
+            throw new IllegalArgumentException("Invalid data: metricType and value must be provided.");
+        }
+
+
+        Telemetry telemetryCreate = new Telemetry();
+        telemetry.setTransactionId(telemetry.getTransactionId());
+        telemetryCreate.setId(UUID.randomUUID()); // Генерируем уникальный идентификатор
+        telemetryCreate.setDeviceId(deviceId); // Устанавливаем ID устройства
+        telemetryCreate.setTimestamp(LocalDateTime.now()); // Устанавливаем временную метку
+        telemetryCreate.setMetricType(metricType); // Устанавливаем тип метрики
+        telemetryCreate.setValue(value); // Устанавливаем значение метрики
+
+
+        return telemetryRepository.save(telemetryCreate);
     }
 }

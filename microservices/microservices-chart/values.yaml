@@ -6,6 +6,7 @@ managementDevice:
     SPRING_DATASOURCE_USERNAME: "device_user"
     SPRING_DATASOURCE_PASSWORD: "password1"
     SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka-server:9092"
+    KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
     SPRING_PROFILES_ACTIVE: "dev"
 
 managementTelemetry:
@@ -16,6 +17,7 @@ managementTelemetry:
     SPRING_DATASOURCE_USERNAME: "device_user"
     SPRING_DATASOURCE_PASSWORD: "password1"
     SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka-server:9092"
+    KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
     SPRING_PROFILES_ACTIVE: "dev"
 
 postgres:
