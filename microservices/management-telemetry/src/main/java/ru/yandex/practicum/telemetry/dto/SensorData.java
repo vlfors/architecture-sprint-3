@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 
 public class SensorData extends Common {
 
-    private int deviceId;
-    private float temperature;
-    private float humidity;
+    private Integer deviceId;
+    private Double temperature;
+    private Double humidity;
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime timestamp;
 }

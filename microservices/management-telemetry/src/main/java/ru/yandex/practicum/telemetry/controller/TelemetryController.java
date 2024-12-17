@@ -18,7 +18,7 @@ public class TelemetryController {
     @Autowired
     private TelemetryService telemetryService;
 
-    @GetMapping("/{deviceId}/")
+    @GetMapping("/{deviceId}")
     public ResponseEntity<List<Telemetry>> getTelemetryData(@PathVariable UUID deviceId) {
         List<Telemetry> telemetryList = telemetryService.getTelemetryData(deviceId);
         return ResponseEntity.ok(telemetryList);
