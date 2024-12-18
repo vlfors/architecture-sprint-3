@@ -36,6 +36,7 @@ public class SensorDataConsumer {
                 data.getTransactionId());
         Telemetry telemetryTemperature = new Telemetry();
         telemetryTemperature.setId(UUID.randomUUID());
+        telemetryTemperature.setDeviceId(data.getDeviceId());
         telemetryTemperature.setTransactionId(data.getTransactionId());
         telemetryTemperature.setTimestamp(data.getTimestamp());
         telemetryTemperature.setMetricType("temperature");
@@ -44,6 +45,7 @@ public class SensorDataConsumer {
 
         Telemetry humidityTemperature = new Telemetry();
         humidityTemperature.setId(UUID.randomUUID());
+        humidityTemperature.setDeviceId(data.getDeviceId());
         humidityTemperature.setTransactionId(data.getTransactionId());
         humidityTemperature.setTimestamp(data.getTimestamp());
         humidityTemperature.setMetricType("humidity");
