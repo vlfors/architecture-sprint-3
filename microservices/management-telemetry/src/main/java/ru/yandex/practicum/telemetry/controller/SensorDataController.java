@@ -1,5 +1,7 @@
 package ru.yandex.practicum.telemetry.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +20,10 @@ public class SensorDataController {
 
     private static final Logger logger = LoggerFactory.getLogger(SensorDataController.class);
 
-    private final KafkaTemplate<String, SensorData> kafkaTemplate;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
     @Autowired
-    public SensorDataController(KafkaTemplate<String, SensorData> kafkaTemplate) {
+    public SensorDataController(KafkaTemplate<String, String> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
@@ -30,11 +32,25 @@ public class SensorDataController {
         try {
             // Логгирование отправки
             logger.info("Отправка данных в топик: {}", sensorData);
-            kafkaTemplate.send("sensor_data", sensorData.getTransactionId().toString(), sensorData);
+            String str =  toString(sensorData);
+            kafkaTemplate.send("sensor_data", sensorData.getTransactionId().toString(), str);
             return ResponseEntity.ok("Сообщение успешно отправлено");
         } catch (Exception e) {
             logger.error("Ошибка при отправке сообщения", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при отправке сообщения");
         }
+    }
+
+    private  String toString(SensorData sensorData) throws JsonProcessingException {
+
+            // Создаем ObjectMapper для преобразования в строку JSON
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            // Преобразуем объект в строку JSON
+            String jsonString = objectMapper.writeValueAsString(sensorData);
+
+            // Выводим результат
+            return jsonString;
+
     }
 }
