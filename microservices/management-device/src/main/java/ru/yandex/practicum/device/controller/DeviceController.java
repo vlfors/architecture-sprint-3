@@ -6,10 +6,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.device.dto.Device;
 import ru.yandex.practicum.device.dto.DeviceCreate;
-import ru.yandex.practicum.device.service.DeviceService;
+import ru.yandex.practicum.device.dto.DeviceStatus;
+import ru.yandex.practicum.device.service.DeviceServiceImp;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +17,7 @@ import java.util.UUID;
 public class DeviceController {
 
     @Autowired
-    private DeviceService deviceService;
+    private DeviceServiceImp deviceService;
 
     @GetMapping
     public ResponseEntity<List<Device>> getDevices() {
@@ -42,8 +41,8 @@ public class DeviceController {
     }
 
     @PutMapping("/{deviceId}/status")
-    public ResponseEntity<Device> updateDeviceStatus(@PathVariable UUID deviceId, @RequestBody DeviceCreate deviceUpdate) {
-        Device device = deviceService.updateDeviceStatus(deviceId, deviceUpdate .getStatus());
+    public ResponseEntity<Device> updateDeviceStatus(@PathVariable UUID deviceId, @RequestBody DeviceStatus deviceUpdate) {
+        Device device = deviceService.updateDeviceStatus(deviceId, deviceUpdate );
         return ResponseEntity.ok(device);
     }
 }

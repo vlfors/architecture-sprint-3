@@ -3,8 +3,10 @@ info:
   title: Device Management Service
   version: 1.0.0
   description: Микросервис для управления устройствами, работающий через Kafka.
+
 servers:
-    url: kafka-broker:9092
+  production_kafka:  # Add a server name
+    url: kafka-server:30092
     protocol: kafka
     description: Kafka сервер для микросервиса управления устройствами
 

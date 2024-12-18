@@ -3,9 +3,26 @@ info:
   title: Telemetry Management API
   version: 1.0.0
   description: API для управления телеметрией.
+
 servers:
-  - url: http://localhost:8082/api
+  - url: "{protocol}://{host}:{port}/api"
     description: Локальный сервер для управления телеметрией
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+      host:
+        default: localhost
+        description: Хост сервера
+      port:
+        default: "30081"
+        description: Порт сервера
+
+  # Пример предустановленных серверов
+  - url: http://localhost:8081/api
+    description: Локальный сервер по умолчанию
 
 paths:
   /telemetry/{deviceId}/:
@@ -26,6 +43,7 @@ paths:
                   value:
                     - id: "b65f14d2-4afc-4689-b8b4-f2f66b17eebd"
                       device_id: "e9f8c3ad-44ea-4f9c-8306-56003491b0c3"
+                      transaction_id: "f7a3de34-5b9c-4d1e-8f2a-1c5e4d3b2a1f"
                       timestamp: "2024-12-08T14:00:00Z"
                       data:
                         temperature: 22.5
@@ -57,12 +75,34 @@ paths:
                   value:
                     - id: "b65f14d2-4afc-4689-b8b4-f2f66b17eebd"
                       device_id: "e9f8c3ad-44ea-4f9c-8306-56003491b0c3"
+                      transaction_id: "f7a3de34-5b9c-4d1e-8f2a-1c5e4d3b2a1f"
                       timestamp: "2024-12-08T14:00:00Z"
                       data:
                         temperature: 22.5
 
         '404':
           description: Телеметрия для устройства не найдена
+        '500':
+          description: Ошибка сервера
+
+  /telemetry:
+    post:
+      summary: Создать новую телеметрическую запись
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TelemetryCreate'
+      responses:
+        '201':
+          description: Телеметрическая запись успешно создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Telemetry'
+        '400':
+          description: Некорректный запрос
         '500':
           description: Ошибка сервера
 
@@ -75,6 +115,25 @@ components:
           type: string
           format: uuid
         device_id:
+          type: string
+          format: uuid
+        transaction_id:
+          type: string
+          format: uuid
+        timestamp:
+          type: string
+          format: date-time
+        data:
+          type: object
+          additionalProperties: true
+
+    TelemetryCreate:
+      type: object
+      properties:
+        device_id:
+          type: string
+          format: uuid
+        transaction_id:
           type: string
           format: uuid
         timestamp:

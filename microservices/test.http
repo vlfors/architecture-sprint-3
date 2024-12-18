@@ -1,0 +1,12 @@
+### GET request to example server
+GET http://78.153.136.48:30081/api/telemetry/27b9213e-5922-44d3-9e0f-59dfe740b972/
+
+
+###
+POST https://examples.http-client.intellij.net/post
+Content-Type: application/json
+
+{
+  "id": 999,
+  "value": "content"
+}
