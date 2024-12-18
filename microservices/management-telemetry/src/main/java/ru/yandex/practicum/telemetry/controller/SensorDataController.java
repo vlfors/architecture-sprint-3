@@ -2,6 +2,7 @@ package ru.yandex.practicum.telemetry.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +42,12 @@ public class SensorDataController {
         }
     }
 
-    private  String toString(SensorData sensorData) throws JsonProcessingException {
+    protected   static String toString(SensorData sensorData) throws JsonProcessingException {
 
             // Создаем ObjectMapper для преобразования в строку JSON
             ObjectMapper objectMapper = new ObjectMapper();
+
+        objectMapper.registerModule(new JavaTimeModule());
 
             // Преобразуем объект в строку JSON
             String jsonString = objectMapper.writeValueAsString(sensorData);
