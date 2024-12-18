@@ -12,6 +12,8 @@ import ru.yandex.practicum.telemetry.dto.SensorData;
 import ru.yandex.practicum.telemetry.model.Telemetry;
 import ru.yandex.practicum.telemetry.repository.TelemetryRepository;
 
+import java.util.UUID;
+
 @Service
 public class SensorDataConsumer {
     private static final Logger logger = LoggerFactory.getLogger(SensorDataConsumer.class);
@@ -31,6 +33,7 @@ public class SensorDataConsumer {
                 data.getTimestamp(),
                 data.getTransactionId());
         Telemetry telemetryTemperature = new Telemetry();
+        telemetryTemperature.setId(UUID.randomUUID());
         telemetryTemperature.setTransactionId(data.getTransactionId());
         telemetryTemperature.setTimestamp(data.getTimestamp());
         telemetryTemperature.setMetricType("temperature");
@@ -38,6 +41,7 @@ public class SensorDataConsumer {
         telemetryRepository.save(telemetryTemperature);
 
         Telemetry humidityTemperature = new Telemetry();
+        humidityTemperature.setId(UUID.randomUUID());
         humidityTemperature.setTransactionId(data.getTransactionId());
         humidityTemperature.setTimestamp(data.getTimestamp());
         humidityTemperature.setMetricType("humidity");
