@@ -3,6 +3,7 @@ package ru.yandex.practicum.telemetry.kafka.consumer;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ public class SensorDataConsumer {
     @Autowired
     TelemetryRepository telemetryRepository;
 
+    @Transactional
     @KafkaListener(topics = "sensor_data", groupId = "telemetry-group")
     public void receiveSensorData(String jsonString) throws JsonProcessingException {
         SensorData data = getSensorDataFromString(jsonString);
@@ -47,8 +49,7 @@ public class SensorDataConsumer {
         humidityTemperature.setMetricType("humidity");
         humidityTemperature.setValue(data.getHumidity());
         telemetryRepository.save(humidityTemperature);
-
-
+        
 
     }
 
