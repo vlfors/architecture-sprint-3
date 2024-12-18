@@ -1,0 +1,233 @@
+openapi: "3.0.2"
+info:
+  title: Device Management API
+  version: 1.0.0
+  description: API для управления устройствами.
+servers:
+  - url: "{protocol}://{host}:{port}/api"
+    description: Конфигурируемый сервер для управления устройствами
+    variables:
+      protocol:
+        enum:
+          - http
+          - https
+        default: http
+      host:
+        default: localhost
+        description: Хост сервера
+      port:
+        default: "30080"
+        description: Порт сервера
+
+  # Пример предустановленных серверов
+  - url: http://localhost:8081/api
+    description: Локальный сервер по умолчанию
+  - url: https://api.example.com/device-management
+    description: Продакшн сервер
+
+paths:
+  /devices:
+    get:
+      summary: Получить список устройств
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Device'
+              examples:
+                success:
+                  summary: Пример ответа
+                  value:
+                    - id: "e9f8c3ad-44ea-4f9c-8306-56003491b0c3"
+                      type_id: "a89a7f44-7d47-4dc3-a6bc-1592e4d2ec29"
+                      house_id: "34e59d3b-8bce-4a8c-8f60-92766c7e5a1f"
+                      name: "Thermostat"
+                      serial_number: "SN12345678"
+                      status: "active"
+                      transaction_id: "f7a3de34-5b9c-4d1e-8f2a-1c5e4d3b2a1f"
+                      created_at: "2024-12-08T12:00:00Z"
+    post:
+      summary: Создает устройство
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceCreate'
+            examples:
+              request:
+                summary: Пример запроса включения
+                value:
+                  id: "e9f8c3ad-44ea-4f9c-8306-56003491b0c3"
+                  type_id: "a89a7f44-7d47-4dc3-a6bc-1592e4d2ec29"
+                  house_id: "34e59d3b-8bce-4a8c-8f60-92766c7e5a1f"
+                  name: "Thermostat"
+                  serial_number: "SN12345678"
+                  status: "active"
+                  transaction_id: "f7a3de34-5b9c-4d1e-8f2a-1c5e4d3b2a1f"
+                  created_at: "2024-12-08T12:00:00Z"
+      responses:
+        '201':
+          description: Устройство успешно создано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+              examples:
+                success:
+                  summary: Пример ответа
+                  value:
+                    id: "e9f8c3ad-44ea-4f9c-8306-56003491b0c3"
+                    type_id: "a89a7f44-7d47-4dc3-a6bc-1592e4d2ec29"
+                    house_id: "34e59d3b-8bce-4a8c-8f60-92766c7e5a1f"
+                    name: "Thermostat"
+                    serial_number: "SN12345678"
+                    status: "active"
+                    transaction_id: "f7a3de34-5b9c-4d1e-8f2a-1c5e4d3b2a1f"
+                    created_at: "2024-12-08T12:00:00Z"
+        '400':
+          description: Некорректный запрос
+        '500':
+          description: Ошибка сервера
+
+  /devices/{deviceId}:
+    get:
+      summary: Получить информацию об устройстве
+      parameters:
+        - name: deviceId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Уникальный идентификатор устройства
+      responses:
+        '200':
+          description: Успешный ответ
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+              examples:
+                success:
+                  summary: Пример ответа
+                  value:
+                    id: "e9f8c3ad-44ea-4f9c-8306-56003491b0c3"
+                    type_id: "a89a7f44-7d47-4dc3-a6bc-1592e4d2ec29"
+                    house_id: "34e59d3b-8bce-4a8c-8f60-92766c7e5a1f"
+                    name: "Thermostat"
+                    serial_number: "SN12345678"
+                    status: "active"
+                    transaction_id: "f7a3de34-5b9c-4d1e-8f2a-1c5e4d3b2a1f"
+                    created_at: "2024-12-08T12:00:00Z"
+        '404':
+          description: Устройство не найдено
+        '500':
+          description: Ошибка сервера
+
+  /devices/{deviceId}/status:
+    put:
+      summary: Изменяет статус устройства
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeviceStatusUpdate'
+            examples:
+              request:
+                summary: Пример запроса обновления статуса
+                value:
+                  status: "on"
+                  transaction_id: "f7a3de34-5b9c-4d1e-8f2a-1c5e4d3b2a1f"
+      responses:
+        '200':
+          description: Статус устройства успешно обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Device'
+              examples:
+                success:
+                  summary: Пример ответа
+                  value:
+                    id: "e9f8c3ad-44ea-4f9c-8306-56003491b0c3"
+                    type_id: "a89a7f44-7d47-4dc3-a6bc-1592e4d2ec29"
+                    house_id: "34e59d3b-8bce-4a8c-8f60-92766c7e5a1f"
+                    name: "Thermostat"
+                    serial_number: "SN12345678"
+                    status: "active"
+                    transaction_id: "f7a3de34-5b9c-4d1e-8f2a-1c5e4d3b2a1f"
+                    created_at: "2024-12-08T12:00:00Z"
+        '400':
+          description: Некорректный запрос
+        '500':
+          description: Ошибка сервера
+
+components:
+  schemas:
+    Device:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        type_id:
+          type: string
+          format: uuid
+        house_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        serial_number:
+          type: string
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
+        transaction_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+
+    DeviceCreate:
+      type: object
+      properties:
+        type_id:
+          type: string
+          format: uuid
+        house_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        serial_number:
+          type: string
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
+        transaction_id:
+          type: string
+          format: uuid
+
+    DeviceStatusUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
+        transaction_id:
+          type: string
+          format: uuid

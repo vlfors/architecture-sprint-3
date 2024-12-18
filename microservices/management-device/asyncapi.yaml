@@ -1,0 +1,57 @@
+asyncapi: 2.6.0
+info:
+  title: Device Management Service
+  version: 1.0.0
+  description: Микросервис для управления устройствами, работающий через Kafka.
+
+servers:
+  production_kafka:  # Add a server name
+    url: kafka-server:30092
+    protocol: kafka
+    description: Kafka сервер для микросервиса управления устройствами
+
+channels:
+  device_commands:
+    description: Канал для получения команд управления устройствами.
+    subscribe:
+      operationId: receiveDeviceCommand
+      summary: Получение команды для устройства
+      message:
+        contentType: application/json
+        payload:
+          type: object
+          properties:
+            deviceId:
+              type: integer
+              description: Уникальный идентификатор устройства
+            command:
+              type: string
+              description: Команда для устройства (например, "turn_on", "turn_off")
+          example:
+            deviceId: 123
+            command: "turn_on"
+
+  device_statuses:
+    description: Канал для публикации статуса устройств.
+    publish:
+      operationId: sendDeviceStatus
+      summary: Публикация текущего статуса устройства
+      message:
+        contentType: application/json
+        payload:
+          type: object
+          properties:
+            deviceId:
+              type: integer
+              description: Уникальный идентификатор устройства
+            status:
+              type: string
+              description: Текущий статус устройства (например, "active", "inactive")
+            timestamp:
+              type: string
+              format: date-time
+              description: Время публикации статуса
+          example:
+            deviceId: 123
+            status: "active"
+            timestamp: "2024-12-08T12:00:00Z"

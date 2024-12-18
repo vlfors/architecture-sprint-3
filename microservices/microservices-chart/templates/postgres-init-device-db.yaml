@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init
+data:
+  init-db.sh: |
+    #!/bin/bash
+    # Этот скрипт больше не нужен, так как база создается автоматически

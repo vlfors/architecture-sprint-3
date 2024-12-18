@@ -1,0 +1,43 @@
+asyncapi: 2.6.0
+info:
+  title: Telemetry Management Service
+  version: 1.0.0
+  description: Микросервис для управления телеметрией, работающий через Kafka.
+
+servers:
+  production_kafka:  # Добавлено имя сервера
+    url: kafka-server:30092
+    protocol: kafka
+    description: Kafka сервер для микросервиса управления телеметрией
+
+channels:
+  sensor_data:
+    description: Канал для получения данных от сенсоров.
+    subscribe:
+      operationId: receiveSensorData
+      summary: Получение данных от сенсоров
+      message:
+        contentType: application/json
+        payload:
+          type: object
+          properties:
+            deviceId:
+              type: integer
+              description: Уникальный идентификатор устройства
+            temperature:
+              type: number
+              format: float
+              description: Температура, измеренная устройством
+            humidity:
+              type: number
+              format: float
+              description: Влажность, измеренная устройством
+            timestamp:
+              type: string
+              format: date-time
+              description: Время получения данных
+          example:
+            deviceId: 123
+            temperature: 25.5
+            humidity: 45.0
+            timestamp: "2024-12-08T12:00:00Z"

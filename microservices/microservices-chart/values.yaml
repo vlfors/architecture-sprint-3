@@ -1,0 +1,32 @@
+managementDevice:
+  image: "ghcr.io/vlfors/architecture-sprint-3/management-device:latest"
+  replicas: 1
+  environment:
+    SPRING_DATASOURCE_URL: "jdbc:postgresql://device-db:5432/device_db"
+    SPRING_DATASOURCE_USERNAME: "device_user"
+    SPRING_DATASOURCE_PASSWORD: "password1"
+    SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka-cluster:9092"
+    KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+    SPRING_PROFILES_ACTIVE: "dev"
+
+managementTelemetry:
+  image: "ghcr.io/vlfors/architecture-sprint-3/management-telemetry:latest"
+  replicas: 1
+  environment:
+    SPRING_DATASOURCE_URL: "jdbc:postgresql://telemetry-db:5432/telemetry_db"
+    SPRING_DATASOURCE_USERNAME: "device_user"
+    SPRING_DATASOURCE_PASSWORD: "password1"
+    SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka-cluster:9092"
+    KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+    SPRING_PROFILES_ACTIVE: "dev"
+
+postgres:
+  image: "postgres:15"
+  user: "device_user"
+  password: "password1"
+
+zookeeper:
+  image: "confluentinc/cp-zookeeper:7.5.0"
+  clientPort: 2181
+  tickTime: 2000
+

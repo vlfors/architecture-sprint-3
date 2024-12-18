@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: management-telemetry
+spec:
+  replicas: {{ .Values.managementTelemetry.replicas }}
+  selector:
+    matchLabels:
+      app: management-telemetry
+  template:
+    metadata:
+      labels:
+        app: management-telemetry
+    spec:
+      containers:
+        - name: management-telemetry
+          image: {{ .Values.managementTelemetry.image }}
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: {{ .Values.managementTelemetry.environment.SPRING_DATASOURCE_URL }}
+            - name: SPRING_DATASOURCE_USERNAME
+              value: {{ .Values.managementTelemetry.environment.SPRING_DATASOURCE_USERNAME }}
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: {{ .Values.managementTelemetry.environment.SPRING_DATASOURCE_PASSWORD }}
+            - name: SPRING_KAFKA_BOOTSTRAP_SERVERS
+              value: {{ .Values.managementTelemetry.environment.SPRING_KAFKA_BOOTSTRAP_SERVERS }}
+            - name: SPRING_PROFILES_ACTIVE
+              value: {{ .Values.managementTelemetry.environment.SPRING_PROFILES_ACTIVE }}
+          ports:
+            - containerPort: 8081
